@@ -51,9 +51,9 @@ module top (
     assign ogp[24] = RGB1[0]; // R1
     assign ogn[24] = RGB0[0]; // R0
 
-    assign gp[17:14] = ogn[17:14];
-    assign gn[17:14] = ogp[17:14];
-    assign gp[24:21] = ogn[24:21];
-    assign gn[24:21] = ogp[24:21];
+    assign gp[17:14] = ogp[17:14];
+    assign gn[17:14] = ogn[17:14];
+    assign gp[24:21] = ogp[24:21];
+    assign gn[24:21] = ogn[24:21];
 
 endmodule

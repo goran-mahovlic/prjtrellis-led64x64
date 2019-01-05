@@ -21,7 +21,7 @@ VERILOG_FILES = \
   rtl/pll_30mhz.v \
   rtl/reset_logic.v
 VHDL_FILES = rtl/ddr.vhd \
-  rtl/lattice/clocks_diamond/clk_25m_200m.vhd \
+  rtl/lattice/clocks_diamond/clk_25_200.vhd \
   rtl/lattice/clocks_diamond/clk_200_60_30.vhd
 
 include scripts/ulx3s_diamond.mk

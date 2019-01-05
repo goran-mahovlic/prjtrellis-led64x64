@@ -9,14 +9,14 @@ use IEEE.std_logic_1164.all;
 library ECP5U;
 use ECP5U.components.all;
 
-entity clk_25m_200m is
+entity clk_25_200 is
     port (
         CLKI: in  std_logic; 
         CLKOP: out  std_logic; 
         LOCK: out  std_logic);
-end clk_25m_200m;
+end;
 
-architecture Structure of clk_25m_200m is
+architecture Structure of clk_25_200 is
 
     -- internal signal declarations
     signal REFCLK: std_logic;

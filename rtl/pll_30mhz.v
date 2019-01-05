@@ -4,8 +4,8 @@ module pll_30mhz (
         output pll_clk);
         
     wire clk_200MHz;
-    clk_25m_200m
-    clk_25m_200m_inst
+    clk_25_200
+    clk_25_200_inst
     (
       .CLKI(clk_pin),
       .CLKOP(clk_200MHz)
