@@ -13,7 +13,7 @@ entity clk_25_200 is
     port (
         CLKI: in  std_logic; 
         CLKOP: out  std_logic; 
-        LOCK: out  std_logic);
+        LOCKED: out  std_logic);
 end;
 
 architecture Structure of clk_25_200 is
@@ -23,6 +23,7 @@ architecture Structure of clk_25_200 is
     signal CLKOP_t: std_logic;
     signal scuba_vhi: std_logic;
     signal scuba_vlo: std_logic;
+    signal LOCK: std_logic;
 
     attribute FREQUENCY_PIN_CLKOP : string; 
     attribute FREQUENCY_PIN_CLKI : string; 
@@ -68,4 +69,6 @@ begin
             REFCLK=>REFCLK, CLKINTFB=>open);
 
     CLKOP <= CLKOP_t;
+    LOCKED <= LOCK;
+    
 end Structure;

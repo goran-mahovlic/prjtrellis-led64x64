@@ -17,7 +17,7 @@ module pll_30mhz (
     clk_200_60_30_inst
     (
       .CLKI(clk_200MHz),
-      .CLKOP(clk_60MHz),
+      // .CLKOP(pll_clk), // 60 MHz
       .CLKOS(pll_clk), // 30 MHz
       .LOCKED(locked)
     );

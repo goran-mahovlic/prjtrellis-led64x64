@@ -18,7 +18,7 @@ VERILOG_FILES = \
   rtl/led_driver.v \
   rtl/led_main.v \
   rtl/painter.v \
-  rtl/pll_30mhz.v \
+  rtl/pll_30mhz_dummy.v \
   rtl/reset_logic.v
 VHDL_FILES = rtl/ddr.vhd \
   rtl/lattice/clocks_diamond/clk_25_200.vhd \
