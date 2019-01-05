@@ -29,16 +29,25 @@ module top (
     );
 
     reg [22:0] counter;
-    always @(posedge clk_25mhz)
+    always @(posedge clk_30MHz)
     begin
       counter <= counter + 1;
     end
     assign led[7] = counter[22] & locked;
+    
+    wire ddr_pin;
+    ddr
+    ddr_inst
+    (
+      .clk(clk_30MHz),
+      .data(led[1:0]),
+      .ddr_pin(ddr_pin)
+    );
 
     wire [27:0] ogp, ogn;
     assign ogp[14] = ADDR[4];
     assign ogn[14] = ADDR[3];
-    assign ogp[15] = SCLK;
+    assign ogp[15] = ddr_pin; // SCLK
     assign ogn[15] = ADDR[2];
     assign ogp[16] = LATCH;
     assign ogn[16] = ADDR[1];
