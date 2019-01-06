@@ -24,6 +24,9 @@ use ieee.numeric_std.all;
 -- RGB0 is pixel in upper half, RGB1 is pixel in lower half (32 pixels below)
 -- display clock is the same as clk
 
+-- when all 64x64 LEDs are illuminated (WHITE)
+-- then from 4V supply it draws 3.3A
+
 entity ledscan is
     generic
     (
