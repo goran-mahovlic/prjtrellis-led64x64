@@ -11,10 +11,14 @@ FLASH_CHIP = is25lp128f
 # ******* design files *******
 CONSTRAINTS = ulx3s_v20_segpdi.lpf
 TOP_MODULE = top
-TOP_MODULE_FILE = emard/top_cable.v
+TOP_MODULE_FILE = vhdl/lattice/top/top_cable.v
 VERILOG_FILES = \
   $(TOP_MODULE_FILE)
-VHDL_FILES = \
-  emard/ledscan.vhd
+VHDL_FILES = vhdl/clk_div.vhd \
+  vhdl/jtag_iface_dummy.vhd \
+  vhdl/ledctrl.vhd \
+  vhdl/main.vhd \
+  vhdl/config.vhd \
+  vhdl/memory.vhd
 
 include scripts/ulx3s_diamond.mk
