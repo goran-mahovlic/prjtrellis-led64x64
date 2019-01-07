@@ -33,6 +33,14 @@ module top
     end
     assign led[7] = blinky[22];
 
+    wire PWM;
+    flickeram
+    flickeram_inst
+    (
+        .clk(pixclk),
+        .pwm(PWM)
+    );
+    assign led[4] = PWM;
 
     // simple animation counter
     reg [26:0] ANIM;

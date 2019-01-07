@@ -11,6 +11,7 @@
 -- to drive individual pixel.
 
 -- pseudo-random is done by shuffling the bits of
+-- https://electronics.stackexchange.com/questions/30521/random-bit-sequence-using-verilog
 -- the counter which would normally run 0-255
 
 -- a lookup table will shuffle the bits, in each
@@ -28,7 +29,8 @@ use ieee.numeric_std.all;
 entity flickeram is
     generic
     (
-        dummy: integer := 0 -- dummy parameter
+        C_flickerfree: boolean := true; -- improves flickering
+        C_bits: integer := 8 -- default 8-bit pwm
     );
     port
     (
@@ -42,13 +44,46 @@ entity flickeram is
 end;
 
 architecture bhv of flickeram is
-    signal R_counter: std_logic;
+    -- main counter that will be comperated to duty cycle to get PWM out
+    signal R_counter: std_logic_vector(C_bits-1 downto 0);
+    signal R_blinky: std_logic_vector(22 downto 0); -- for debugging
+    signal R_comparison_counter: std_logic_vector(C_bits-1 downto 0);
+    signal R_output_compare: std_logic_vector(C_bits-1 downto 0);
+    signal R_random: std_logic_vector(30 downto 0); -- 31-bit random
 begin
     -- main process that always runs
     process(clk)
     begin
         if rising_edge(clk) then
+          R_blinky <= R_blinky + 1;
+          if conv_integer(R_blinky(R_blinky'high-2 downto 0)) = 0 then
+            R_output_compare <= R_output_compare + 1; -- for fade
+          end if;
         end if;
     end process;
     
+    -- simple pseudo random number generator
+    -- see https://electronics.stackexchange.com/questions/30521/random-bit-sequence-using-verilog
+    process(clk)
+    begin
+        if rising_edge(clk) then
+          R_random <= R_random(29 downto 0) & (R_random(30) xor R_random(27));
+        end if;
+    end process;
+    
+    R_counter <= R_blinky(R_blinky'high downto R_blinky'high-C_bits+1);    
+
+    I_yes_flickerfree: if C_flickerfree generate
+    F_reverse_bits:
+    for i in 0 to C_bits-1 generate
+      R_comparison_counter(i) <= R_counter(C_bits-1-i);
+    end generate;
+    end generate;
+
+    I_not_flickerfree: if not C_flickerfree generate
+      -- R_comparison_counter <= R_counter;
+      R_comparison_counter <= R_random(R_comparison_counter'high downto 0);
+    end generate;
+
+    pwm <= '1' when conv_integer(R_comparison_counter) < conv_integer(R_output_compare) else '0';
 end bhv;
