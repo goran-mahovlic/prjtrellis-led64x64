@@ -49,7 +49,7 @@ architecture bhv of flickeram is
     signal R_blinky: std_logic_vector(22 downto 0); -- for debugging
     signal R_comparison_counter: std_logic_vector(C_bits-1 downto 0);
     signal R_output_compare: std_logic_vector(C_bits-1 downto 0);
-    signal R_random: std_logic_vector(30 downto 0); -- 31-bit random
+    signal R_random: std_logic_vector(30 downto 0) := (others => '1'); -- 31-bit random
 begin
     -- main process that always runs
     process(clk)
@@ -62,12 +62,13 @@ begin
         end if;
     end process;
     
-    -- simple pseudo random number generator
-    -- see https://electronics.stackexchange.com/questions/30521/random-bit-sequence-using-verilog
+    -- simple pseudo random number generator, see
+    -- https://electronics.stackexchange.com/questions/30521/random-bit-sequence-using-verilog
+    -- https://www.xilinx.com/support/documentation/application_notes/xapp052.pdf
     process(clk)
     begin
         if rising_edge(clk) then
-          R_random <= R_random(29 downto 0) & (R_random(30) xor R_random(27));
+          R_random(30 downto 0) <= R_random(29 downto 0) & (R_random(30) xor R_random(27));
         end if;
     end process;
     
