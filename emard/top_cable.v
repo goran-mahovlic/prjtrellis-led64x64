@@ -13,6 +13,35 @@ module top
     wire pixclk;
     assign pixclk = clk_25mhz;
 
+    // test picture generator
+    wire [7:0] CounterX, CounterY;
+    wire [4:0] ADDRY0;
+    assign ADDRY0 = ADDRY+1;
+    assign CounterX = ADDRX + ANIM[26:20];
+    assign CounterY = {1'b0,ADDRY0} + ANIM[26:18];
+    wire [7:0] W = {8{CounterX[7:0]==CounterY[7:0]}};
+    wire [7:0] A = {8{CounterX[7:5]==3'h2 && CounterY[7:5]==3'h2}};
+    wire [7:0] red, green, blue;
+    assign red = ({CounterX[5:0] & {6{CounterY[4:3]==~CounterX[4:3]}}, 2'b00} | W) & ~A;
+    assign green = (CounterX[7:0] & {8{CounterY[6]}} | W) & ~A;
+    assign blue = CounterY[7:0] | W | A;
+
+    // same as above but for lower half of the display (32 pixels below)
+    wire [7:0] CounterY1;
+    assign CounterY1 = {1'b1,ADDRY0} + ANIM[26:18];
+    wire [7:0] W1 = {8{CounterX[7:0]==CounterY1[7:0]}};
+    wire [7:0] A1 = {8{CounterX[7:5]==3'h2 && CounterY1[7:5]==3'h2}};
+    wire [7:0] red1, green1, blue1;
+    assign red1 = ({CounterX[5:0] & {6{CounterY1[4:3]==~CounterX[4:3]}}, 2'b00} | W1) & ~A1;
+    assign green1 = (CounterX[7:0] & {8{CounterY1[6]}} | W1) & ~A1;
+    assign blue1 = CounterY[7:0] | W1 | A1;
+
+    wire [2:0] RGB0, RGB1;
+
+    // for 3bpp mode
+    // assign RGB0 = {blue[7], green[7], red[7]};
+    // assign RGB1 = {blue1[7], green1[7], red1[7]};
+
     wire [6:0] ADDRX;
     wire [4:0] ADDRY;
     wire BLANK, LATCH;
@@ -20,6 +49,14 @@ module top
     ledscan_inst
     (
         .clk(pixclk),
+        .r0(red),
+        .g0(green),
+        .b0(blue),
+        .r1(red1),
+        .g1(green1),
+        .b1(blue1),
+        .rgb0(RGB0),
+        .rgb1(RGB1),
         .addrx(ADDRX),
         .addry(ADDRY),
         .latch(LATCH),
@@ -49,32 +86,6 @@ module top
       ANIM <= ANIM + 1;
     end
 
-    // test picture generator
-    wire [7:0] CounterX, CounterY;
-    wire [4:0] ADDRY0;
-    assign ADDRY0 = ADDRY+1;
-    assign CounterX = ADDRX + ANIM[26:20];
-    assign CounterY = {1'b0,ADDRY0} + ANIM[26:18];
-    wire [7:0] W = {8{CounterX[7:0]==CounterY[7:0]}};
-    wire [7:0] A = {8{CounterX[7:5]==3'h2 && CounterY[7:5]==3'h2}};
-    wire [7:0] red, green, blue;
-    assign red = ({CounterX[5:0] & {6{CounterY[4:3]==~CounterX[4:3]}}, 2'b00} | W) & ~A;
-    assign green = (CounterX[7:0] & {8{CounterY[6]}} | W) & ~A;
-    assign blue = CounterY[7:0] | W | A;
-
-    // same as above but for lower half of the display (32 pixels below)
-    wire [7:0] CounterY1;
-    assign CounterY1 = {1'b1,ADDRY0} + ANIM[26:18];
-    wire [7:0] W1 = {8{CounterX[7:0]==CounterY1[7:0]}};
-    wire [7:0] A1 = {8{CounterX[7:5]==3'h2 && CounterY1[7:5]==3'h2}};
-    wire [7:0] red1, green1, blue1;
-    assign red1 = ({CounterX[5:0] & {6{CounterY1[4:3]==~CounterX[4:3]}}, 2'b00} | W1) & ~A1;
-    assign green1 = (CounterX[7:0] & {8{CounterY1[6]}} | W1) & ~A1;
-    assign blue1 = CounterY[7:0] | W1 | A1;
-
-    wire [2:0] RGB0, RGB1;
-    assign RGB0 = {blue[7], green[7], red[7]};
-    assign RGB1 = {blue1[7], green1[7], red1[7]};
 
     // simple combinatorial logic which also creates some picture
     // assign RGB0 = ADDRX[2:0] == 7 ? 3'b010 : 3'b100; // 3'bBGR
