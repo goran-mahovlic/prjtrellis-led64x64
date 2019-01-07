@@ -39,20 +39,20 @@ module top
     assign CounterY = {1'b0,ADDRY0} + ANIM[anim_bits-1:anim_bits-9];
     wire [7:0] W = {8{CounterX[7:0]==CounterY[7:0]}};
     wire [7:0] A = {8{CounterX[7:5]==3'h2 && CounterY[7:5]==3'h2}};
-    wire [7:0] red, green, blue;
-    assign red = ({CounterX[5:0] & {6{CounterY[4:3]==~CounterX[4:3]}}, 2'b00} | W) & ~A;
-    assign green = (CounterX[7:0] & {8{CounterY[6]}} | W) & ~A;
-    assign blue = CounterY[7:0] | W | A;
+    reg [7:0] red, green, blue;
+    always @(posedge pixclk) red <= ({CounterX[5:0] & {6{CounterY[4:3]==~CounterX[4:3]}}, 2'b00} | W) & ~A;
+    always @(posedge pixclk) green = (CounterX[7:0] & {8{CounterY[6]}} | W) & ~A;
+    always @(posedge pixclk) blue = CounterY[7:0] | W | A;
 
     // same as above but for lower half of the display (32 pixels below)
     wire [7:0] CounterY1;
     assign CounterY1 = {1'b1,ADDRY0} + ANIM[anim_bits-1:anim_bits-9];
     wire [7:0] W1 = {8{CounterX[7:0]==CounterY1[7:0]}};
     wire [7:0] A1 = {8{CounterX[7:5]==3'h2 && CounterY1[7:5]==3'h2}};
-    wire [7:0] red1, green1, blue1;
-    assign red1 = ({CounterX[5:0] & {6{CounterY1[4:3]==~CounterX[4:3]}}, 2'b00} | W1) & ~A1;
-    assign green1 = (CounterX[7:0] & {8{CounterY1[6]}} | W1) & ~A1;
-    assign blue1 = CounterY[7:0] | W1 | A1;
+    reg [7:0] red1, green1, blue1;
+    always @(posedge pixclk) red1 = ({CounterX[5:0] & {6{CounterY1[4:3]==~CounterX[4:3]}}, 2'b00} | W1) & ~A1;
+    always @(posedge pixclk) green1 = (CounterX[7:0] & {8{CounterY1[6]}} | W1) & ~A1;
+    always @(posedge pixclk) blue1 = CounterY[7:0] | W1 | A1;
 
     wire [2:0] RGB0, RGB1;
 
