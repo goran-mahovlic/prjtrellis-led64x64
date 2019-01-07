@@ -12,8 +12,8 @@ use ieee.numeric_std.all;
 
 -- driving sequence
 
--- addrx -2: blank <= 1, addryy++
--- addrx -1: blank <= 0
+-- addrx -2: blank <= 1, addry <= addry + 1
+-- addrx -1: blank <= 0, if addry == 0 then bcm_counter <= bcm_counter + 1
 -- addrx 0-63: display bits
 -- addrx 62: latch <= 1
 -- addrx 63: latch <= 0
@@ -22,12 +22,14 @@ use ieee.numeric_std.all;
 -- convert addrx and addry with combinatorial logic to calculate RGB0 and RGB1
 -- RGB0 is pixel in upper half, RGB1 is pixel in lower half (32 pixels below)
 -- display clock is the same as clk
+-- if 8-bit color intensity > reversed bits of bcm_counter then LED=ON else LED=OFF
 
 -- when all 64x64 LEDs are illuminated (WHITE)
 -- then from 4V supply it draws 3.3A
 
 -- Each LED can be either ON or OFF,
--- to have 24-bit color LEDs need to be PWM'd
+-- to have 24-bit color LEDs need to be somehow
+-- PWM driver
 -- but simple PWM will flicker so we use
 -- a sort of BCM (binary coded modulation)
 -- using reverse bits of the frame counter

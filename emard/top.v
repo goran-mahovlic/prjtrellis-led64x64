@@ -6,6 +6,11 @@ module top
     output [27:0] gp, gn,
     output wifi_gpio0
 );
+    //  0: PMOD straight male header to flat cable
+    // 90: PMOD 90-deg female header
+    parameter PMOD_J1 = 0;
+    parameter PMOD_J2 = 90;
+
     // prevent ESP32 firmware from taking control of the board
     // (we don't want it write its "passthru" bitstream)
     assign wifi_gpio0 = 1'b1;
@@ -102,21 +107,60 @@ module top
     assign ogp[24] = RGB1[0]; // R1
     assign ogn[24] = RGB0[0]; // R0
 
-    // if ULX3S has male header (pins):
-    // PMOD is connected with flat cable
-    // then swap P and N
-    assign gp[17:14] = ogn[17:14];
-    assign gn[17:14] = ogp[17:14];
-    assign gp[24:21] = ogn[24:21];
-    assign gn[24:21] = ogp[24:21];
+    generate
+      if(PMOD_J1 == 90)
+      // if ULX3S has 90-deg female header (holes):
+      // PMOD is connected directly to header (align 3.3V/GND)
+      // directly connect P and N
+      begin : J1_90deg
+        // J1 connector
+        assign gp[3:0] = ogp[17:14];
+        assign gn[3:0] = ogn[17:14];
+        assign gp[10:7] = ogp[24:21];
+        assign gn[10:7] = ogn[24:21];
+      end
+    endgenerate
+
+    generate
+      if(PMOD_J1 == 0)
+      // if ULX3S has straight male header (pins):
+      // PMOD is connected with flat cable (align 3.3V/GND)
+      // swap P and N
+      begin : J1_flat_cable
+        // J1 connector
+        assign gp[3:0] = ogn[17:14];
+        assign gn[3:0] = ogp[17:14];
+        assign gp[10:7] = ogn[24:21];
+        assign gn[10:7] = ogp[24:21];
+      end
+    endgenerate
+
+    generate
+      if(PMOD_J2 == 90)
+      // if ULX3S has 90-deg female header (holes):
+      // PMOD is connected directly to header (align 3.3V/GND)
+      // directly connect P and N
+      begin : J2_90deg
+        // J2 connector
+        assign gp[17:14] = ogp[17:14];
+        assign gn[17:14] = ogn[17:14];
+        assign gp[24:21] = ogp[24:21];
+        assign gn[24:21] = ogn[24:21];
+      end
+    endgenerate
+
+    generate
+      if(PMOD_J2 == 0)
+      // if ULX3S has straight male header (pins):
+      // PMOD is connected with flat cable (align 3.3V/GND)
+      // swap P and N
+      begin : J2_flat_cable
+        // J2 connector
+        assign gp[17:14] = ogn[17:14];
+        assign gn[17:14] = ogp[17:14];
+        assign gp[24:21] = ogn[24:21];
+        assign gn[24:21] = ogp[24:21];
+      end
+    endgenerate
     
-    // if ULX3S has female 90-deg header (holes):
-    // PMOD is connected directly to header (align 3.3V/GND)
-    // then directly connect P and N
-    /*
-    assign gp[17:14] = ogp[17:14];
-    assign gn[17:14] = ogn[17:14];
-    assign gp[24:21] = ogp[24:21];
-    assign gn[24:21] = ogn[24:21];
-    */
 endmodule
