@@ -14,7 +14,7 @@ module top
     assign pixclk = clk_25mhz;
 
     // simple animation counter
-    parameter anim_bits = 27;
+    parameter anim_bits = 26;
     reg [anim_bits-1:0] ANIM;
     always @(posedge pixclk)
     begin
@@ -82,16 +82,6 @@ module top
       blinky <= blinky + 1;
     end
     assign led[7] = blinky[22];
-
-    wire PWM;
-    flickeram
-    flickeram_inst
-    (
-        .clk(pixclk),
-        .pwm(PWM)
-    );
-    assign led[4] = PWM;
-
 
     // output pins mapping to ULX3S board    
     wire [27:0] ogp, ogn;

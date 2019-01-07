@@ -1,7 +1,7 @@
 # ******* project, board and chip name *******
 PROJECT = led64x64
 BOARD = ulx3s
-FPGA_SIZE = 12
+FPGA_SIZE = 25
 FPGA_PACKAGE = 6bg381c
 # config flash: 1:SPI (standard), 4:QSPI (quad)
 FLASH_SPI = 4
@@ -15,7 +15,6 @@ TOP_MODULE_FILE = emard/top_cable.v
 VERILOG_FILES = \
   $(TOP_MODULE_FILE)
 VHDL_FILES = \
-  emard/ledscan.vhd \
-  emard/flickeram.vhd
+  emard/ledscan.vhd
 
 include scripts/ulx3s_diamond.mk
