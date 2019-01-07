@@ -13,12 +13,25 @@ module top
     wire pixclk;
     assign pixclk = clk_25mhz;
 
+    // simple animation counter
+    parameter anim_bits = 27;
+    reg [anim_bits-1:0] ANIM;
+    always @(posedge pixclk)
+    begin
+      ANIM <= ANIM + 1;
+    end
+
+    // simple combinatorial logic which also creates some picture
+    // assign RGB0 = ADDRX[2:0] == 7 ? 3'b010 : 3'b100; // 3'bBGR
+    // assign RGB0 = ADDRX[2:0] == ADDRY[2:0] + ANIM[26:24] ? 3'b010 : 3'b100; // 3'bBGR
+    // assign RGB1 = ADDRX[2:0] == ANIM[26:24] ? 3'b011 : 3'b100; // 3'bBGR
+
     // test picture generator
     wire [7:0] CounterX, CounterY;
     wire [4:0] ADDRY0;
     assign ADDRY0 = ADDRY+1;
-    assign CounterX = ADDRX + ANIM[26:20];
-    assign CounterY = {1'b0,ADDRY0} + ANIM[26:18];
+    assign CounterX = ADDRX + ANIM[anim_bits-1:anim_bits-7];
+    assign CounterY = {1'b0,ADDRY0} + ANIM[anim_bits-1:anim_bits-9];
     wire [7:0] W = {8{CounterX[7:0]==CounterY[7:0]}};
     wire [7:0] A = {8{CounterX[7:5]==3'h2 && CounterY[7:5]==3'h2}};
     wire [7:0] red, green, blue;
@@ -28,7 +41,7 @@ module top
 
     // same as above but for lower half of the display (32 pixels below)
     wire [7:0] CounterY1;
-    assign CounterY1 = {1'b1,ADDRY0} + ANIM[26:18];
+    assign CounterY1 = {1'b1,ADDRY0} + ANIM[anim_bits-1:anim_bits-9];
     wire [7:0] W1 = {8{CounterX[7:0]==CounterY1[7:0]}};
     wire [7:0] A1 = {8{CounterX[7:5]==3'h2 && CounterY1[7:5]==3'h2}};
     wire [7:0] red1, green1, blue1;
@@ -79,18 +92,6 @@ module top
     );
     assign led[4] = PWM;
 
-    // simple animation counter
-    reg [26:0] ANIM;
-    always @(posedge pixclk)
-    begin
-      ANIM <= ANIM + 1;
-    end
-
-
-    // simple combinatorial logic which also creates some picture
-    // assign RGB0 = ADDRX[2:0] == 7 ? 3'b010 : 3'b100; // 3'bBGR
-    // assign RGB0 = ADDRX[2:0] == ADDRY[2:0] + ANIM[26:24] ? 3'b010 : 3'b100; // 3'bBGR
-    // assign RGB1 = ADDRX[2:0] == ANIM[26:24] ? 3'b011 : 3'b100; // 3'bBGR
 
     // output pins mapping to ULX3S board    
     wire [27:0] ogp, ogn;
