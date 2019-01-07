@@ -64,16 +64,13 @@ begin
     -- main process that always runs
     process(clk)
     begin
-        If_rising_edge:
         if rising_edge(clk) then
-          If_addrx_running:
           if R_addrx = "0111111" then
             R_addrx <= "1111110"; -- -2
           else
             R_addrx <= R_addrx + 1; -- x counter always runs
-          end if If_addrx_running;
+          end if;
 
-          Case_panel_signaling:
           case R_addrx is
             when "1111110" => -- -2
               R_blank <= '1';
@@ -85,8 +82,8 @@ begin
             when "0111111" => -- 63
               R_latch <= '0'; -- remove latch
             when others =>
-          end case Case_panel_signaling;
-        end if If_rising_edge;
+          end case;
+        end if;
     end process;
     
 end bhv;

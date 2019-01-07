@@ -67,11 +67,11 @@ module top
     wire [2:0] RGB0, RGB1;
     assign RGB0 = {blue[7], green[7], red[7]};
     assign RGB1 = {blue1[7], green1[7], red1[7]};
-    // combinatorial logic which creates the picture
+
+    // simple combinatorial logic which also creates some picture
     // assign RGB0 = ADDRX[2:0] == 7 ? 3'b010 : 3'b100; // 3'bBGR
     // assign RGB0 = ADDRX[2:0] == ADDRY[2:0] + ANIM[26:24] ? 3'b010 : 3'b100; // 3'bBGR
     // assign RGB1 = ADDRX[2:0] == ANIM[26:24] ? 3'b011 : 3'b100; // 3'bBGR
-
 
     // output pins mapping to ULX3S board    
     wire [27:0] ogp, ogn;
