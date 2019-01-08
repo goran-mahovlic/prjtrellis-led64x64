@@ -29,8 +29,8 @@ use ieee.numeric_std.all;
 
 -- Each LED can be either ON or OFF,
 -- to have 24-bit color LEDs need to be somehow
--- PWM driver
--- but simple PWM will flicker so we use
+-- flickered as fast as possible
+-- simple PWM will do visible flickering so we use
 -- a sort of BCM (binary coded modulation)
 -- using reverse bits of the frame counter
 
