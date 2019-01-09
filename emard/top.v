@@ -91,12 +91,12 @@ module top
 
     sprite_rom upper_sprite(
         .clk(pixclk),
-        .addr({ ADDRY[5:0], ADDRX[5:0] }),
+        .addr({ ADDRY, ADDRX[5:0] }),
         .data_out(sprite_rgb0));
 
     sprite_rom lower_sprite(
         .clk(pixclk),
-        .addr({ ADDRY[5:0], ADDRX[5:0] }),
+        .addr({ ADDRY, ADDRX[5:0] }),
         .data_out(sprite_rgb1));
 
 /* Custom video generator */
