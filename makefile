@@ -8,7 +8,8 @@ CONSTRAINTS = ulx3s_v20_segpdi.lpf
 TOP_MODULE = top
 TOP_MODULE_FILE = emard/top.v
 VERILOG_FILES = \
-  $(TOP_MODULE_FILE)
+  $(TOP_MODULE_FILE) \
+  emard/sprite_rom.v
 VHDL_TO_VERILOG_FILES = \
   emard/ledscan.v
 
