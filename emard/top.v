@@ -40,6 +40,8 @@ module top
     wire [7:0] W = {8{CounterX[7:0]==CounterY[7:0]}};
     wire [7:0] A = {8{CounterX[7:5]==3'h2 && CounterY[7:5]==3'h2}};
     reg [7:0] red, green, blue;
+ 
+
     always @(posedge pixclk) red <= ({CounterX[5:0] & {6{CounterY[4:3]==~CounterX[4:3]}}, 2'b00} | W) & ~A;
     always @(posedge pixclk) green = (CounterX[7:0] & {8{CounterY[6]}} | W) & ~A;
     always @(posedge pixclk) blue = CounterY[7:0] | W | A;
@@ -67,12 +69,12 @@ module top
     ledscan_inst
     (
         .clk(pixclk),
-        .r0(red),
-        .g0(green),
-        .b0(blue),
-        .r1(red1),
-        .g1(green1),
-        .b1(blue1),
+        .r0(sprite_rgb0[23:16]),
+        .g0(sprite_rgb0[15:8]),
+        .b0(sprite_rgb0[7:0]),
+        .r1(sprite_rgb1[23:16]),
+        .g1(sprite_rgb2[15:8]),
+        .b1(sprite_rgb0[7:0]),
         .rgb0(RGB0),
         .rgb1(RGB1),
         .addrx(ADDRX),
@@ -85,20 +87,17 @@ module top
        Custom video generator
    ----------------------------*/
 
-  //  wire [23:0] sprite_rgb;
-
-    wire [10:0] sprite_x;
-    wire [10:0] sprite_y;
+    wire [23:0] sprite_rgb0, sprite_rgb1;
 
     sprite_rom upper_sprite(
         .clk(pixclk),
-        .addr({ sprite_y[5:0], sprite_x[5:0] }),
-        .data_out(RGB0));
+        .addr({ ADDRY[5:0], ADDRX[5:0] }),
+        .data_out(sprite_rgb0));
 
     sprite_rom lower_sprite(
         .clk(pixclk),
-        .addr({ sprite_y[5:0], sprite_x[5:0] }),
-        .data_out(RGB1));
+        .addr({ ADDRY[5:0], ADDRX[5:0] }),
+        .data_out(sprite_rgb1));
 
 /* Custom video generator */
 
