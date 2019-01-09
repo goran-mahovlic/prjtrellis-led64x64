@@ -81,6 +81,22 @@ module top
         .blank(BLANK)
     );
     
+/* ----------------------------
+       Custom video generator
+   ----------------------------*/
+
+    wire [23:0] sprite_rgb;
+
+    wire [10:0] sprite_x;
+    wire [10:0] sprite_y;
+
+    sprite_rom sprite(
+        .clk(pixclk),
+        .addr({ sprite_y[5:0], sprite_x[5:0] }),
+        .data_out(sprite_rgb));
+
+/* Custom video generator */
+
     reg [22:0] blinky;
     always @(posedge pixclk)
     begin
