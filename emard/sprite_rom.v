@@ -1,10 +1,11 @@
 module sprite_rom(
   input clk,
   input [11:0] addr,
-  output [23:0] data_out
+  output [23:0] data0,
+  output [23:0] data1
 );
 
-  reg [3:0] store[0:4095];
+  reg [4:0] store[0:4095];
   wire [23:0] palette[0:15];
 
   assign palette[0] = 24'h000000;
@@ -29,6 +30,7 @@ module sprite_rom(
 		$readmemh("emard/sprite.mem", store);
   end
 
-  always @(posedge clk)
-	  data_out <= palette[store[addr]];
+  always @(posedge clk) data0 <= palette[store[addr]];
+  always @(posedge clk) data1 <= palette[store[addr]];
+
 endmodule
