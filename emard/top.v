@@ -72,9 +72,9 @@ module top
         .r0(sprite_rgb0[23:16]),
         .g0(sprite_rgb0[15:8]),
         .b0(sprite_rgb0[7:0]),
-        .r1(sprite_rgb1[23:16]),
-        .g1(sprite_rgb2[15:8]),
-        .b1(sprite_rgb0[7:0]),
+        .r1(sprite_rgb0[47:40]),
+        .g1(sprite_rgb0[39:32]),
+        .b1(sprite_rgb0[31:24]),
         .rgb0(RGB0),
         .rgb1(RGB1),
         .addrx(ADDRX),
@@ -87,17 +87,12 @@ module top
        Custom video generator
    ----------------------------*/
 
-    wire [23:0] sprite_rgb0, sprite_rgb1;
+    wire [47:0] sprite_rgb0;
 
-    sprite_rom upper_sprite(
+    sprite_rom sprite(
         .clk(pixclk),
         .addr({ ADDRY, ADDRX[5:0] }),
         .data_out(sprite_rgb0));
-
-    sprite_rom lower_sprite(
-        .clk(pixclk),
-        .addr({ ADDRY, ADDRX[5:0] }),
-        .data_out(sprite_rgb1));
 
 /* Custom video generator */
 
