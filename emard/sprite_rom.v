@@ -30,7 +30,9 @@ module sprite_rom(
 		$readmemh("emard/sprite.mem", store);
   end
 
-  always @(posedge clk) data0 <= palette[store[addr]];
-  always @(posedge clk) data1 <= palette[store[addr]];
+  reg [23:0] data0, data1;
+	
+  always @(posedge clk) data0 <= palette[store[ {1'b0, addr[10:6], addr[5:0] } ]];
+  always @(posedge clk) data1 <= palette[store[ {1'b1, addr[10:6], addr[5:0] } ]];
 
 endmodule
