@@ -91,7 +91,8 @@ module top
 
     sprite_rom sprite(
         .clk(pixclk),
-        .addr({ ADDRY, ADDRX[5:0] }),
+        .addry(ADDRY),
+        .addrx(ADDRX[5:0]),
         .data0(sprite_rgb0),
         .data1(sprite_rgb1));
 

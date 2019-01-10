@@ -1,6 +1,7 @@
 module sprite_rom(
   input clk,
-  input [11:0] addr,
+  input [5:0] addrx,
+  input [4:0] addry,
   output [23:0] data0,
   output [23:0] data1
 );
@@ -31,8 +32,14 @@ module sprite_rom(
   end
 
   reg [23:0] data0, data1;
-	
-  always @(posedge clk) data0 <= palette[store[ {1'b0, addr[10:6], addr[5:0] } ]];
-  always @(posedge clk) data1 <= palette[store[ {1'b1, addr[10:6], addr[5:0] } ]];
+  
+  wire [5:0] ax;
+  wire [4:0] ay;
+  
+  assign ax = addrx;
+  assign ay = addry + 1; // test with -1
+  
+  always @(posedge clk) data0 <= palette[store[ {1'b0, ay, ax } ]];
+  always @(posedge clk) data1 <= palette[store[ {1'b1, ay, ax } ]];
 
 endmodule
