@@ -9,29 +9,29 @@ module sprite_rom(
   reg [4:0] store[0:4095];
   wire [23:0] palette[0:15];
 
-  assign palette[0] = 24'h000000;
-  assign palette[1] = 24'h180002;
-  assign palette[2] = 24'h240001;
-  assign palette[3] = 24'h390100;
-  assign palette[4] = 24'h530000;
-  assign palette[5] = 24'h710000;
-  assign palette[6] = 24'h8a0000;
-  assign palette[7] = 24'ha20000;
-  assign palette[8] = 24'hba0000;
-  assign palette[9] = 24'hdd0002;
-  assign palette[10] = 24'hff0000;
-  assign palette[11] = 24'hff3031;
-  assign palette[12] = 24'hff5f62;
-  assign palette[13] = 24'hff8d8b;
-  assign palette[14] = 24'hffcccb;
-  assign palette[15] = 24'hffffff;  
+assign palette[0] = 24'h000000;
+assign palette[1] = 24'h808080;
+assign palette[2] = 24'hc0c0c0;
+assign palette[3] = 24'hffffff;
+assign palette[4] = 24'h800000;
+assign palette[5] = 24'hff0000;
+assign palette[6] = 24'h808000;
+assign palette[7] = 24'hffff00;
+assign palette[8] = 24'h008000;
+assign palette[9] = 24'h00ff00;
+assign palette[10] = 24'h008080;
+assign palette[11] = 24'h00ffff;
+assign palette[12] = 24'h000080;
+assign palette[13] = 24'h0000ff;
+assign palette[14] = 24'h800080;
+assign palette[15] = 24'hff00ff;
 
   initial
   begin
 		$readmemh("emard/sprite.mem", store);
   end
 
-  reg [23:0] data0, data1;
+  wire [23:0] data0, data1;
   
   wire [5:0] ax;
   wire [4:0] ay;
@@ -39,7 +39,12 @@ module sprite_rom(
   assign ax = addrx;
   assign ay = addry + 1; // test with -1
   
-  always @(posedge clk) data0 <= palette[store[ {1'b0, ay, ax } ]];
-  always @(posedge clk) data1 <= palette[store[ {1'b1, ay, ax } ]];
+  reg [3:0] pixel0, pixel1;
+  
+  always @(posedge clk) pixel0 <= store[ {1'b0, ay, ax } ];
+  always @(posedge clk) pixel1 <= store[ {1'b1, ay, ax } ];
+  
+  assign data0 = palette[pixel0];
+  assign data1 = palette[pixel1];
 
 endmodule
