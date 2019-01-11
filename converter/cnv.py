@@ -19,6 +19,7 @@ def main():
     parser.add_argument('-b', '--debug', help="save output to provided image file", type=str)
     parser.add_argument('-c', '--colors', help="Number of colors in palette (default 16)", default=16, type=int)
     parser.add_argument('-g', '--gamma', help="gamma correction", default=1.0, type=float)
+    parser.add_argument('-n', '--gain', help="gain", default=1.0, type=float)
     parser.add_argument('-o', '--output', help="Output file name (default output.mem)", default="output.mem")
     parser.add_argument('-p', '--palette', help="Save palette to file instead of printing to stdout", type=str)
     parser.add_argument('input_image', help="Input image (jpg, png, gif)")
@@ -52,9 +53,16 @@ def main():
 
     # gamma correction
     if args.gamma!=1.0:
-        for y in range(im.size[0]):
-            for x in range(im.size[1]):
+        for y in range(im.height):
+            for x in range(im.width):
                 px = tuple([int(((c/255.0)**args.gamma)*255) for c in im.getpixel((x, y))])
+                im.putpixel((x,y), px)
+
+    # "amplification"
+    if args.gain!=1.0:
+        for y in range(im.height):
+            for x in range(im.width):
+                px = tuple([max(0, min(int(c*args.gain),255)) for c in im.getpixel((x, y))])
                 im.putpixel((x,y), px)
 
     if args.dither:
