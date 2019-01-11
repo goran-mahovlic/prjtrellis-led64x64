@@ -60,9 +60,10 @@ def main():
         palette += [(0,0,0)]*(args.colors-len(palette))
     
     # print out palette
-    for idx, c in enumerate(palette):
-        print("assign palette[%d] = 24'h%02x%02x%02x;" % (idx, c[0], c[1], c[2]))
-
+    with open("palette.raw", 'w') as p:
+        for idx, c in enumerate(palette):
+            print("assign palette[%d] = 24'h%02x%02x%02x;" % (idx, c[0], c[1], c[2]))
+            p.write("%02x%02x%02x\n"%(c[0], c[1], c[2]))
     # save output image
     with open(args.output, 'w') as f:
         for y in range(im.height):
