@@ -21,7 +21,7 @@ module sprite_rom(
   wire [4:0] ay;
   
   assign ax = addrx;
-  assign ay = addry + 1; // test with -1
+  assign ay = addry + 1;
   
   reg [3:0] pixel0, pixel1;
   

@@ -40,10 +40,6 @@ module top
         .latch(LATCH),
         .blank(BLANK)
     );
-    
-/* ----------------------------
-       Custom video generator
-   ----------------------------*/
 
     wire [23:0] sprite_rgb0,sprite_rgb1;
 
@@ -53,9 +49,6 @@ module top
         .addrx(ADDRX[5:0]),
         .data0(sprite_rgb0),
         .data1(sprite_rgb1));
-
-
-/* Custom video generator */
 
     reg [22:0] blinky;
     always @(posedge pixclk)
