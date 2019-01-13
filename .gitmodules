@@ -1,0 +1,6 @@
+[submodule "overview"]
+	path = overview
+	url = https://bitbucket.org/igor_b/fpgaimgconvert/overview
+[submodule "fpgaimgconvert"]
+	path = fpgaimgconvert
+	url = https://bitbucket.org/igor_b/fpgaimgconvert.git
