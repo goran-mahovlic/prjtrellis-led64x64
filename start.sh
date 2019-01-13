@@ -1,4 +1,4 @@
-./fpgaimgconvert/cnv.py ../images/image.png -p palette.raw -g 2.5 -n 0.6
+./fpgaimgconvert/cnv.py images/image.png -p palette.raw -g 2.5 -n 0.6
 mv output.mem emard/sprite.mem
 mv palette.raw emard/palette.raw
 make clean
