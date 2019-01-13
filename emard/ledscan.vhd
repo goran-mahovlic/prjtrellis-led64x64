@@ -72,6 +72,10 @@ architecture bhv of ledscan is
     -- signal R_random: std_logic_vector(30 downto 0) := (others => '1'); -- 31-bit random (not used)
     signal R_bcm_counter: std_logic_vector(C_bpc-1 downto 0); -- frame counter for BCM
     signal S_compare_val: std_logic_vector(C_bpc-1 downto 0); -- output modulation comapersion value
+    constant C_2pixels_b4_1st_x_pixel: std_logic_vector(C_bits_x downto 0) := std_logic_vector(to_unsigned(           -2, C_bits_x+1)); -- -2
+    constant C_1pixel_b4_1st_x_pixel:  std_logic_vector(C_bits_x downto 0) := std_logic_vector(to_unsigned(           -1, C_bits_x+1)); -- -1
+    constant C_last_x_pixel:           std_logic_vector(C_bits_x downto 0) := std_logic_vector(to_unsigned(2**C_bits_x-1, C_bits_x+1)); -- 2**C_bits_x-1
+    constant C_1pixel_b4_last_x_pixel: std_logic_vector(C_bits_x downto 0) := std_logic_vector(to_unsigned(2**C_bits_x-2, C_bits_x+1)); -- 2**C_bits_x-2
 begin
     addrx <= R_addrx;
     addry <= R_addry;
@@ -82,24 +86,24 @@ begin
     process(clk)
     begin
         if rising_edge(clk) then
-          if R_addrx = "0111111" then
-            R_addrx <= "1111110"; -- -2
+          if R_addrx = C_last_x_pixel then
+            R_addrx <= C_2pixels_b4_1st_x_pixel;
           else
             R_addrx <= R_addrx + 1; -- x counter always runs
           end if;
 
           case R_addrx is
-            when "1111110" => -- -2
+            when C_2pixels_b4_1st_x_pixel => -- -2
               R_blank <= '1';
               R_addry <= R_addry + 1; -- increment during blank=1
-            when "1111111" => -- -1
+            when C_1pixel_b4_1st_x_pixel => -- -1
               R_blank <= '0';
               if conv_integer(R_addry) = 0 then
                 R_bcm_counter <= R_bcm_counter + 1;
               end if;
-            when "0111110" => -- 62
+            when C_1pixel_b4_last_x_pixel => -- 62
               R_latch <= '1'; -- send latch 1-clock early
-            when "0111111" => -- 63
+            when C_last_x_pixel => -- 63
               R_latch <= '0'; -- remove latch
             when others =>
           end case;
